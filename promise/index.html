@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .ball{width:40px; height: 40px; border-radius: 20px;margin-left: 0px;}
+        .ball1{background-color:red;}
+        .ball2{background-color:black;}
+        .ball3{background-color:blue;}
+    </style>
+    <script src="../node_modules/bluebird/js/browser/bluebird.js"></script>
+</head>
+<body>
+    <div class="ball ball1" style="margin-left: 0;"></div>
+    <div class="ball ball2" style="margin-left: 0;"></div>
+    <div class="ball ball3" style="margin-left: 0;"></div>
+</body>
+<script>
+    var ball1 = document.getElementsByClassName("ball1")[0];
+    var ball2 = document.getElementsByClassName("ball2")[0];
+    var ball3 = document.getElementsByClassName("ball3")[0];
+
+//    function anitimate(ball,dis,cb){
+//        var marginLeft = parseInt(ball.style.marginLeft,10);
+//        setTimeout(function(){
+//            if(marginLeft == dis){
+//                cb && cb();
+//            }else{
+//                if(marginLeft < dis){
+//                    marginLeft++;
+//                }else{
+//                    marginLeft--;
+//                }
+//                ball.style.marginLeft = marginLeft + 'px';
+//                anitimate(ball,dis,cb);
+//            }
+//        },13);
+//    }
+//    anitimate(ball1,100,function(){
+//        anitimate(ball2,200,function(){
+//            anitimate(ball3,300,function(){
+//                anitimate(ball1,150,function(){
+//                    anitimate(ball2,150,function(){
+//                        anitimate(ball3,150,function(){
+//                        });
+//                    });
+//                });
+//            });
+//        });
+//    });
+
+    var Promise = window.Promise;
+    function promiseAnimate(ball,dis){
+        return new Promise(function(resolve,reject){
+            function anitimate(){
+                var marginLeft = parseInt(ball.style.marginLeft,10);
+                setTimeout(function(){
+                    if(marginLeft == dis){
+                        resolve();
+                    }else{
+                        if(marginLeft < dis){
+                            marginLeft++;
+                        }else{
+                            marginLeft--;
+                        }
+                        ball.style.marginLeft = marginLeft + 'px';
+                        anitimate();
+                    }
+                },13);
+            }
+            anitimate();
+        })
+    }
+    promiseAnimate(ball1,100)
+        .then(function(){
+            return promiseAnimate(ball2,200);
+        })
+        .then(function(){
+            return promiseAnimate(ball3,300);
+        })
+        .then(function(){
+            return promiseAnimate(ball1,150);
+        })
+        .then(function(){
+            return promiseAnimate(ball2,150);
+        })
+        .then(function(){
+            return promiseAnimate(ball3,150);
+        });
+</script>
+</html>
